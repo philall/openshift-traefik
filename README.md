@@ -5,17 +5,7 @@ to be used on OpenShift by running as a non-priviledged user.
 
 ## Run
 
-  ### Clone repo
-    git clone https://github.com/philall/openshift-traefic.git
-
-  ### Build Image
-
-    docker build -t openshift-traefik .
-
-  ### Run Container
-
-
-    docker run -p 8080:8080 -p 8443:8443 -p 8081:8081 -v $PWD/etc/traefik.toml:/traefik.toml openshift-traefik
+    docker run -d -p 8080:8080 -p 8443:8443 -p 8081:8081 -v $PWD/etc/traefik.toml:/traefik.toml -v $PWD/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it philippallgeuer/openshift-traefik
 
 | Port | Protocol     |
 | :------------- | :------------- |
