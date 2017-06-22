@@ -1,0 +1,81 @@
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: traefik
+  labels:
+    app: traefik
+    component: traefik-server
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 300
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources:
+  triggers:
+    - type: ConfigChange
+  replicas: 1
+  selector:
+    app: traefik
+    component: traefik-server
+  template:
+    metadata:
+      labels:
+        app: traefik
+        component: traefik-server
+    spec:
+      containers:
+        - name: traefik
+          image: traefik
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8081
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256M
+            requests:
+              cpu: 100m
+              memory: 256M
+          volumeMounts:
+            - name: traefik-config-dir
+              mountPath: /etc/traefik
+          livenessProbe:
+            httpGet:
+              path: /dashboard/#/health
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext:
+      # Change this if you want to bind a persistent volume claim
+      volumes:
+        - name: traefik-config-dir
+          configMap:
+            name: traefik-config
+            items:
+              - key: traefik.toml
+                path: traefik.toml

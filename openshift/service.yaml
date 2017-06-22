@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+  labels:
+    app: traefik
+    component: service
+  annotations:
+    description: 'Exposes the traefik server'
+spec:
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: 8081-tcp
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: 8443-tcp
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+  selector:
+    app: traefik
+    component: traefik-server
