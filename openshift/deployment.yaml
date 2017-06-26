@@ -47,9 +47,11 @@ spec:
           volumeMounts:
             - name: traefik-config-dir
               mountPath: /etc/traefik
+            - name: letsencrypt-config-dir
+              mountPath: /etc/letsencrypt
           livenessProbe:
             httpGet:
-              path: /dashboard/#/health
+              path: /dashboard/
               port: 8081
               scheme: HTTP
             initialDelaySeconds: 5
@@ -79,3 +81,9 @@ spec:
             items:
               - key: traefik.toml
                 path: traefik.toml
+        - name: letsencrypt-config-dir
+          secret:
+            secretName: letsencrypt-config
+            items:
+              - key: acme.json
+                path: acme.json
