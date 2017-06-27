@@ -49,6 +49,7 @@ spec:
               mountPath: /etc/traefik
             - name: letsencrypt-config-dir
               mountPath: /etc/letsencrypt
+              readOnly: false
           livenessProbe:
             httpGet:
               path: /dashboard/

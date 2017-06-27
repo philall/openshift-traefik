@@ -17,7 +17,7 @@ data:
         [entryPoints.https.tls]
     [acme]
     email = "letsencrypt@example.com"
-    storage = "acme.json"
+    storage = "/etc/letsencrypt/acme.json"
     entryPoint = "https"
     onDemand = false
     OnHostRule = true

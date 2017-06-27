@@ -17,6 +17,7 @@ to be used on OpenShift by running as a non-priviledged user.
 
     oc login https://<your-master-node>:8443
     oc new-project traefik
-    oc create -f openshift/deployment.yaml
+    oc create -f openshift/acme_secret.yaml
+    oc create -f openshift/traefik_configmap.yaml
     oc create -f openshift/deployment.yaml
     oc create -f openshift/service.yaml
