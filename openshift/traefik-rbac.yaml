@@ -1,0 +1,135 @@
+# Kubernetes 1.6+ introduces RBAC (Role Based Access Control)
+# you may need to authorize Traefik to use the Kubernetes API
+# using ClusterRole and ClusterRoleBinding
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik-ingress
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-serviceaccount
+  namespace: traefik-ingress
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: traefik-ingress-clusterrole
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmap
+      - pods
+      - nodes
+      - endpoints
+      - secrets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+       - "extensions"
+    resources:
+       - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: traefik-ingress-role
+  namespace: traefik-ingress
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - namespace
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourcesNames:
+        # Defaults to "<election-id>-<ingress-class>"
+        # Here: "<ingress-controller-leader>-<traefik>"
+        # This has to be adapted if you change either parameter
+        # when launching the traefik-ingress-controller.
+      - "ingress-controller-leader-traefik"
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+        - endpoints
+    verbs:
+        - get
+        - create
+        - update
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: traefik-ingress-role-binding
+  namespace: traefik-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: traefik-ingress-role
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-serviceaccount
+    namespace: traefik-ingress
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: traefik-ingress-clusterrole-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: traefik-ingress-serviceaccount
+  namespace: traefik-ingress
