@@ -4,20 +4,11 @@ metadata:
   name: traefik-config
 data:
   traefik.toml: |
+    [web]
+    address = ":8081"
     logLevel = "DEBUG"
-    defaultEntryPoints = ["http", "https"]
+    defaultEntryPoints = ["http"]
     [kubernetes]
     [entryPoints]
       [entryPoints.http]
-      address = ":80"
-        [entryPoints.http.redirect]
-        entryPoint = "https"
-      [entryPoints.https]
-      address = ":443"
-        [entryPoints.https.tls]
-    [acme]
-    email = "letsencrypt@example.com"
-    storage = "/etc/letsencrypt/acme.json"
-    entryPoint = "https"
-    onDemand = false
-    OnHostRule = true
+      address = ":8080"

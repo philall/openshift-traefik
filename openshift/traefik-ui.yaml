@@ -7,8 +7,8 @@ spec:
   selector:
     k8s-app: traefik-ingress-lb
   ports:
-  - port: 80
-    targetPort: 8080
+  - port: 8081
+    targetPort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -16,7 +16,7 @@ metadata:
   name: traefik-web-ui
   namespace: traefik-ingress
   annotations:
-    kubernetes.io/ingress.class: "ingress-controller-leader-traefik"
+    kubernetes.io/ingress.class: traefik
 spec:
   rules:
   - host: traefik-ui.local
@@ -24,4 +24,4 @@ spec:
       paths:
       - backend:
           serviceName: traefik-web-ui
-          servicePort: 80
+          servicePort: 8081

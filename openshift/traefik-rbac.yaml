@@ -2,17 +2,12 @@
 # you may need to authorize Traefik to use the Kubernetes API
 # using ClusterRole and ClusterRoleBinding
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: traefik-ingress
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: traefik-ingress-serviceaccount
   namespace: traefik-ingress
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: v1
 kind: ClusterRole
 metadata:
   name: traefik-ingress-clusterrole
@@ -64,7 +59,7 @@ rules:
     verbs:
       - update
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: v1
 kind: Role
 metadata:
   name: traefik-ingress-role
@@ -107,13 +102,13 @@ rules:
         - create
         - update
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: authorization.openshift.io/v1
 kind: RoleBinding
 metadata:
   name: traefik-ingress-role-binding
   namespace: traefik-ingress
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
+  apiGroup: authorization.openshift.io
   kind: Role
   name: traefik-ingress-role
 subjects:
@@ -121,12 +116,12 @@ subjects:
     name: traefik-ingress-serviceaccount
     namespace: traefik-ingress
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
+apiVersion: authorization.openshift.io/v1
 metadata:
   name: traefik-ingress-clusterrole-binding
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
+  apiGroup: authorization.openshift.io
   kind: ClusterRole
   name: traefik-ingress-clusterrole
 subjects:
