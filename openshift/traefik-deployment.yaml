@@ -39,6 +39,8 @@ spec:
         volumeMounts:
           - name: traefik-config-dir
             mountPath: /etc/traefik
+          - name: letsencrypt-config-dir
+            mountPath: /etc/traefik/acme
       securityContext:
       # Change this if you want to bind a persistent volume claim
       volumes:
@@ -48,6 +50,12 @@ spec:
             items:
               - key: traefik.toml
                 path: traefik.toml
+        - name: letsencrypt-config-dir
+          secret:
+            secretName: letsencrypt-config
+            items:
+              - key: acme.json
+                patch: acme.json
 ---
 kind: Service
 apiVersion: v1
