@@ -50,7 +50,17 @@ Deploy traefik ingress controler and service with ingress to expose the traefik 
 ## ToDo
 
 - [ ] write RoleBinding yaml file
-- [ ] write ClusterRoleBinding yaml file
+- [x] write ClusterRoleBinding yaml file
 - [ ] impl. Let's Encrypt
 - [ ] redirect http to https
 - [ ] impl. prometheus for metric
+- [ ] pre_start hooks to exec ```chmod 600 acme.json```
+
+## Issues
+
+    Error from server (NotFound): error when creating "openshift/traefik-rbac.yaml": role.authorization.openshift.io "traefik-ingress-role" not found
+
+    oc get role traefik-ingress-role
+
+    NAME
+    traefik-ingress-role

@@ -1,3 +1,6 @@
+# persistentVolumeClaim
+
+
 # it is possible to use traefik with a Deployment or DaemonSet
 kind: Deployment
 apiVersion: extensions/v1beta1
@@ -39,8 +42,8 @@ spec:
         volumeMounts:
           - name: traefik-config-dir
             mountPath: /etc/traefik
-          - name: letsencrypt-config-dir
-            mountPath: /etc/traefik/acme
+          - name: acme
+            mountPath: /acme/acme.json
       securityContext:
       # Change this if you want to bind a persistent volume claim
       volumes:
@@ -50,12 +53,10 @@ spec:
             items:
               - key: traefik.toml
                 path: traefik.toml
-        - name: letsencrypt-config-dir
-          secret:
-            secretName: letsencrypt-config
-            items:
-              - key: acme.json
-                patch: acme.json
+        - name: acme
+          persistentVolumeClaim:
+            claimName: acme-conf
+
 ---
 kind: Service
 apiVersion: v1
