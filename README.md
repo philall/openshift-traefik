@@ -49,12 +49,12 @@ Deploy traefik ingress controler and service with ingress to expose the traefik 
 
 ## ToDo
 
-- [ ] write RoleBinding yaml file
+- [x] write RoleBinding yaml file
 - [x] write ClusterRoleBinding yaml file
-- [ ] impl. Let's Encrypt
+- [x] impl. Let's Encrypt
 - [ ] redirect http to https
 - [ ] impl. prometheus for metric
-- [ ] pre_start hooks to exec ```chmod 600 acme.json```
+- [x] pre_start hooks to exec ```chmod 600 acme.json```
 
 ## Issues
 

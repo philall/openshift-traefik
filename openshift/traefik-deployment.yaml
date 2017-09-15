@@ -23,7 +23,7 @@ spec:
       serviceAccountName: traefik-ingress-serviceaccount
       terminationGracePeriodSeconds: 60
       containers:
-      - image: traefik
+      - image: traefik:1.4-alpine
         name: traefik-ingress-lb
         ports:
           - containerPort: 8080
@@ -43,7 +43,7 @@ spec:
           - name: traefik-config-dir
             mountPath: /etc/traefik
           - name: acme
-            mountPath: /acme/acme.json
+            mountPath: /acme
       securityContext:
       # Change this if you want to bind a persistent volume claim
       volumes:
